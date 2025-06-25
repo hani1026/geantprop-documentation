@@ -60,12 +60,12 @@ When creating `I3GeantService`, the following parameters can be configured.
 *   ``skipMuon`` : If this value is `true`, all muon (`MuPlus`, `MuMinus`) particles are immediately skipped without being propagated in Geant4. This is useful when using another propagator (e.g., `PROPOSAL`) to handle muons separately.
 
 Usage & Examples
---------------------------------------
+----------------
 
 The following is a complete example of setting up `I3GeantService` and utilizing callback functions.
 
 Basic Configuration
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -219,12 +219,12 @@ Geant4 Simulation Basic Structure
 *   **Step**: The smallest unit composing a Track. It is the short segment from the point where a particle has a physical interaction to the next interaction point. Geant4 moves the particle's position in steps, and at the end of each step, it calculates physical processes such as energy loss, particle annihilation, and secondary particle generation.
 
 Class Structure Overview
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 `geantprop` consists of several classes implemented by inheriting Geant4's standard interfaces ("User Action", etc.). These classes can be broadly divided into **Top-Level Service**, **Simulation Control**, **Simulation Environment**, and **Data Processing & Utilities**.
 
 Top-Level Service
-^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~
 
 I3GeantService
 ++++++++++++++
@@ -245,7 +245,7 @@ The central manager that oversees all functions of `geantprop`. It inherits from
     4. Collects the simulation results as a vector of `I3Particle` and adds them to the MCTree / MMCtrackList before returning.
 
 Simulation Control (User Actions)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 These classes directly control the main flow of the Geant4 simulation (event, track, step).
 
@@ -274,7 +274,7 @@ TrkStackingAction
 A class that passes newly created secondary particles to the callback.
 
 Simulation Environment (Physics & Geometry)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TrkDetectorConstruction
 +++++++++++++++++++++++
@@ -304,7 +304,7 @@ A class where the core optimization of Cerenkov radiation is implemented.
 *   **SimStep Information Passing**: Packages the calculated number of photons and step information into an `I3SimStep` and passes it to the user callback.
 
 Data Processing & Utilities
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 These are auxiliary classes that help the above classes operate smoothly.
 
