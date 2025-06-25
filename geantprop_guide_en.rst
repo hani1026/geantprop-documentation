@@ -221,18 +221,18 @@ Geant4 Simulation Basic Structure
 Class Structure Overview
 ------------------------
 
-``I3GeantService``
+*   ``I3GeantService``
 
 The central manager that oversees all functions of `geantprop`. It inherits from `I3PropagatorService` to integrate with the Icetray framework.
 
-*   Singleton Pattern Implementation : The `std::atomic<bool> thereCanBeOnlyOneGeant4` flag allows only one instance per process. Attempting to create a second instance results in a runtime error.
+Singleton Pattern Implementation : The `std::atomic<bool> thereCanBeOnlyOneGeant4` flag allows only one instance per process. Attempting to create a second instance results in a runtime error.
 
-*   Particle Filtering Logic : The `ShouldSkip()` method pre-filters particles based on the following rules:
+#   Particle Filtering Logic : The `ShouldSkip()` method pre-filters particles based on the following rules:
     - All neutrinos are automatically skipped.
     - If `skipMuon_` is true, muons are skipped.
     - EM and Hadronic particles with energy exceeding `CrossoverEnergyEM`/`CrossoverEnergyHadron` are skipped.
 
-*   Actual Propagation Execution : The `Propagate()` method performs the following steps:
+#   Actual Propagation Execution : The `Propagate()` method performs the following steps:
     1. Converts `I3Particle` to `G4ParticleGun`.
     2. Registers callback functions with each Action class.
     3. Executes a single event by calling `runManager_->BeamOn(1)`.
@@ -250,9 +250,9 @@ A class that manages the tracks of individual particles. It records the relation
 
 A class responsible for step-by-step processing. It only processes the **primary particle** to which the Geant service is assigned.
 
-*   MMC Track Segment Creation : When the accumulated path of the current track's particle exceeds `binSize`, it finalizes the current track and starts a new one.
+#   MMC Track Segment Creation : When the accumulated path of the current track's particle exceeds `binSize`, it finalizes the current track and starts a new one.
 
-*   Energy Loss Calculation : It calculates the amount of energy lost by recording the start and end energies for each segment.
+#   Energy Loss Calculation : It calculates the amount of energy lost by recording the start and end energies for each segment.
 
 ``TrkStackingAction``
 
