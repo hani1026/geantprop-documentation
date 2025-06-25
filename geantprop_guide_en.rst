@@ -226,14 +226,14 @@ Class Structure Overview
 
 The central manager that oversees all functions of `geantprop`. It inherits from `I3PropagatorService` to integrate with the Icetray framework.
 
-*   **Singleton Pattern Implementation**: The `std::atomic<bool> thereCanBeOnlyOneGeant4` flag allows only one instance per process. Attempting to create a second instance results in a runtime error.
+*   Singleton Pattern Implementation : The `std::atomic<bool> thereCanBeOnlyOneGeant4` flag allows only one instance per process. Attempting to create a second instance results in a runtime error.
 
-*   **Particle Filtering Logic**: The `ShouldSkip()` method pre-filters particles based on the following rules:
+*   Particle Filtering Logic : The `ShouldSkip()` method pre-filters particles based on the following rules:
     - All neutrinos are automatically skipped.
     - If `skipMuon_` is true, muons are skipped.
     - EM and Hadronic particles with energy exceeding `CrossoverEnergyEM`/`CrossoverEnergyHadron` are skipped.
 
-*   **Actual Propagation Execution**: The `Propagate()` method performs the following steps:
+*   Actual Propagation Execution : The `Propagate()` method performs the following steps:
     1. Converts `I3Particle` to `G4ParticleGun`.
     2. Registers callback functions with each Action class.
     3. Executes a single event by calling `runManager_->BeamOn(1)`.
@@ -254,9 +254,9 @@ A class that manages the tracks of individual particles. It records the relation
 
 A class responsible for step-by-step processing. It only processes the **primary particle** to which the Geant service is assigned.
 
-*   **MMC Track Segment Creation**: When the accumulated path of the current track's particle exceeds `binSize`, it finalizes the current track and starts a new one.
+*   MMC Track Segment Creation : When the accumulated path of the current track's particle exceeds `binSize`, it finalizes the current track and starts a new one.
 
-*   **Energy Loss Calculation**: It calculates the amount of energy lost by recording the start and end energies for each segment.
+*   Energy Loss Calculation : It calculates the amount of energy lost by recording the start and end energies for each segment.
 
 ``TrkStackingAction``
 ~~~~~~~~~~~~~~~~~
@@ -268,27 +268,27 @@ A class that passes newly created secondary particles to the callback.
 
 A class that defines the geometry and materials of the simulation world.
 
-*   **Complex Ice Model Construction**: Defines the optical properties of the medium, such as refractive index, absorption length, and scattering length of ice, via `mediumProperties`.
+*   Complex Ice Model Construction : Defines the optical properties of the medium, such as refractive index, absorption length, and scattering length of ice, via `mediumProperties`.
 
-*   **3D Geometric Structure**: Models a realistic IceCube geometry including the World Volume, a rock layer, and an air layer.
+*   3D Geometric Structure : Models a realistic IceCube geometry including the World Volume, a rock layer, and an air layer.
 
 ``TrkOpticalPhysics``
 ~~~~~~~~~~~~~~~~~
 
 A class that registers optical physics processes with the Geant4 engine.
 
-*   **Cerenkov Process Registration** (`ConstructProcess`): Registers the Cerenkov process.
+*   Cerenkov Process Registration (`ConstructProcess`) : Registers the Cerenkov process.
 
-*   **Wavelength Bias Function Setting**: Sets the wavelength weights for importance sampling via `SetWlenBiasFunction()`.
+*   Wavelength Bias Function Setting : Sets the wavelength weights for importance sampling via `SetWlenBiasFunction()`.
 
 ``TrkCerenkov``
 ~~~~~~~~~~~
 
 A class where the core optimization of Cerenkov radiation is implemented.
 
-*   **Statistical Photon Calculation** (`PostStepDoIt`): Calculates the number of photons to be generated in the current step.
+*   Statistical Photon Calculation (`PostStepDoIt`): Calculates the number of photons to be generated in the current step.
 
-*   **SimStep Information Passing**: Packages the calculated number of photons and step information into an `I3SimStep` and passes it to the user callback.
+*   SimStep Information Passing : Packages the calculated number of photons and step information into an `I3SimStep` and passes it to the user callback.
 
 ``TrkPrimaryGeneratorAction``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -300,31 +300,31 @@ A class that injects the initial particle at the starting point of the simulatio
 
 A container class that stores per-event state information.
 
-*   **Callback Function Storage**: Stores the `StepCallback` and `SecondaryCallback` registered by the user.
+*   Callback Function Storage : Stores the `StepCallback` and `SecondaryCallback` registered by the user.
 
-*   **Medium Information**: Stores `maxRefractiveIndex` to provide necessary information for Cerenkov calculations.
+*   Medium Information : Stores `maxRefractiveIndex` to provide necessary information for Cerenkov calculations.
 
 ``I3ParticleG4ParticleConverter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Handles the two-way conversion between `I3Particle` and Geant4 data formats.
 
-*   **Particle Gun Setup** (`SetParticleGun`): A class that injects the initial particle.
+*   Particle Gun Setup (`SetParticleGun`): A class that injects the initial particle.
 
-*   **PDG Code Conversion**: Converts IceCube particle types to Geant4's PDG encoding.
+*   PDG Code Conversion : Converts IceCube particle types to Geant4's PDG encoding.
 
-*   **Unit Conversion**: Handles the conversion between the IceCube unit system (`I3Units`) and the Geant4 unit system (`CLHEP`).
+*   Unit Conversion : Handles the conversion between the IceCube unit system (`I3Units`) and the Geant4 unit system (`CLHEP`).
 
 ``TrkUISessionToQueue``
 ~~~~~~~~~~~~~~~~~~~
 
 A bridge class that connects Geant4 messages to the IceCube logging system.
 
-*   **Message Queuing**: Stores all output from Geant4 (`G4cout`, `G4cerr`) in a queue.
+*   Message Queuing : Stores all output from Geant4 (`G4cout`, `G4cerr`) in a queue.
 
-*   **Log Level Classification**: Forwards error messages as `log_warn()` and normal messages as `log_debug()`.
+*   Log Level Classification : Forwards error messages as `log_warn()` and normal messages as `log_debug()`.
 
-*   **Thread Safety**: Ensures thread safety through asynchronous message processing via the queue.
+*   Thread Safety : Ensures thread safety through asynchronous message processing via the queue.
 
 Tests
 -----
