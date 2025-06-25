@@ -226,7 +226,7 @@ I3GeantService
 
 The central manager that oversees all functions of `geantprop`. It inherits from `I3PropagatorService` to integrate with the Icetray framework.
 
-* Singleton Pattern Implementation : The `std::atomic<bool> thereCanBeOnlyOneGeant4` flag allows only one instance per process. Attempting to create a second instance results in a runtime error.
+* Singleton Pattern Implementation : The ``thereCanBeOnlyOneGeant4`` flag allows only one instance per process. Attempting to create a second instance results in a runtime error.
 
 * Particle Filtering Logic : The `ShouldSkip()` method pre-filters particles based on the following rules.
     - All neutrinos are automatically skipped.
