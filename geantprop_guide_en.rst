@@ -1,3 +1,4 @@
+
 ..
 .. Copyright (c) 2025 Hani Kimku <hkimku1@icecube.wisc.edu>
 .. SPDX-License-Identifier: ISC
@@ -64,7 +65,7 @@ Usage & Examples
 The following is a complete example of setting up `I3GeantService` and utilizing callback functions.
 
 Basic Configuration
--------------------
+~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -118,7 +119,7 @@ Basic Configuration
    )
 
 Utilizing Callback Functions
-----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The callback mechanism allows users to directly intervene in the simulation process. This enables extensions without modifying the core code of `geantprop`. Callback functions are invoked whenever specific conditions are met during the simulation.
 
@@ -183,7 +184,7 @@ Called whenever a secondary particle is generated in Geant4. When this function 
    propagator.SetSecondaryCallback(advanced_secondary_filter)
 
 Registering with I3PropagatorModule
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -207,7 +208,7 @@ Registering with I3PropagatorModule
                   RNGStateName="I3MCTree_preGeant_RNGState")
                   
 Geant4 Simulation Basic Structure
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *   **Run**: The largest unit of simulation. The detector geometry and applied physics laws do not change during a single Run. The entire process from the creation to the destruction of one `I3GeantService` object corresponds to one Run.
 
@@ -218,7 +219,7 @@ Geant4 Simulation Basic Structure
 *   **Step**: The smallest unit composing a Track. It is the short segment from the point where a particle has a physical interaction to the next interaction point. Geant4 moves the particle's position in steps, and at the end of each step, it calculates physical processes such as energy loss, particle annihilation, and secondary particle generation.
 
 Class Structure Overview
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 `geantprop` consists of several classes implemented by inheriting Geant4's standard interfaces ("User Action", etc.). These classes can be broadly divided into **Top-Level Service**, **Simulation Control**, **Simulation Environment**, and **Data Processing & Utilities**.
 
@@ -226,7 +227,7 @@ Top-Level Service
 ^^^^^^^^^^^^^^^^^
 
 I3GeantService
---------------
+++++++++++++++
 
 The central manager that oversees all functions of `geantprop`. It inherits from `I3PropagatorService` to integrate with the Icetray framework.
 
@@ -249,17 +250,17 @@ Simulation Control (User Actions)
 These classes directly control the main flow of the Geant4 simulation (event, track, step).
 
 TrkEventAction
---------------
+++++++++++++++
 
 A class that controls the simulation at the event level. It stores the `StepCallback` and `SecondaryCallback` registered by the user in the event information, making them accessible to other Action classes.
 
 TrkTrackingAction
------------------
++++++++++++++++++
 
 A class that manages the tracks of individual particles. It records the relationship between parent and child particles and also records the particle's path length.
 
 TrkSteppingAction
------------------
++++++++++++++++++
 
 A class responsible for step-by-step processing. It only processes the **primary particle** to which the Geant service is assigned.
 
