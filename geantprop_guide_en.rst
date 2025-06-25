@@ -44,7 +44,7 @@ When creating `I3GeantService`, the following parameters can be configured.
 
 *   ``maxBetaChangePerStep`` : The maximum allowed change in a particle's velocity (β = v/c) in a single Geant4 step. This is applied in the `TrkCerenkov` class. Setting this value smaller allows for more precise calculation of trajectories for particles that curve in a magnetic field or lose energy rapidly, but it slows down the simulation.
 
-*   ``maxNumPhotonsPerStep`` : Limits the maximum number of Cherenkov photons that can be generated in a single Geant4 step. This is applied in the `TrkCerenkov` class and serves as a safeguard to prevent very high-energy particles from using excessive memory or computation time by generating a vast number of photons in one step.
+*   ``maxNumPhotonsPerStep`` : Limits the maximum number of Cerenkov photons that can be generated in a single Geant4 step. This is applied in the `TrkCerenkov` class and serves as a safeguard to prevent very high-energy particles from using excessive memory or computation time by generating a vast number of photons in one step.
 
 *   ``createMCTree`` : If this value is `true`, all secondary particles (electrons, positrons, muons, pions, etc.) generated in the Geant4 simulation are collected and added to the `I3MCTree`. If set to `false`, secondary particle information is not saved. As the particle's energy increases, the number of secondary particles grows, thus increasing memory usage.
 
@@ -52,7 +52,7 @@ When creating `I3GeantService`, the following parameters can be configured.
 
 *   ``createMMCTrackList`` : If `createMMCTrackList` is `true`, the path of the primary particle is added to the frame as an `I3MMCTrackList`. `I3MMCTrack` records the particle's entire path by dividing it into several straight segments of `binSize` length (in meters).
 
-*   ``CrossoverEnergyEM`` : Energy cutoff value (in GeV) for electromagnetic (EM) interactions. If the energy of a particle being simulated exceeds this cutoff value, Geant4 will no longer propagate that particle.
+*   ``CrossoverEnergyEM`` : Energy cutoff value (in GeV) for electromagnetic (EM) interactions. If the energy of a particle being simulated exceeds this cutoff value, Geant4 will no longer propagate that particle. 
 
 *   ``CrossoverEnergyHadron`` : Energy cutoff value (in GeV) for hadronic interactions. If the energy of a particle being simulated exceeds this cutoff value, Geant4 will no longer propagate that particle.
 
@@ -145,7 +145,7 @@ Called for each step in Geant4.
    propagator.SetStepCallback(analyze_energy_loss)
 
 **SecondaryCallback - Particle Filtering and Analysis**
-Called whenever a secondary particle is generated in Geant4.
+Called whenever a secondary particle is generated in Geant4. When this function returns `True`, the particle is killed and not added to the MCTree.
 
 .. code-block:: python
 
@@ -154,7 +154,7 @@ Called whenever a secondary particle is generated in Geant4.
    def advanced_secondary_filter(particle, pid, process_name):
        """Advanced filtering function called upon secondary particle creation"""
        
-       # Record particle information
+       # Record particle information 
        secondary_particles.append({
            'type': particle.GetTypeString(),
            'energy': particle.GetEnergy(),
@@ -289,14 +289,14 @@ TrkOpticalPhysics
 
 A class that registers optical physics processes with the Geant4 engine.
 
-*   **Cherenkov Process Registration** (`ConstructProcess`): Registers the Cherenkov process.
+*   **Cerenkov Process Registration** (`ConstructProcess`): Registers the Cerenkov process.
 
 *   **Wavelength Bias Function Setting**: Sets the wavelength weights for importance sampling via `SetWlenBiasFunction()`.
 
 TrkCerenkov
 +++++++++++
 
-A class where the core optimization of Cherenkov radiation is implemented.
+A class where the core optimization of Cerenkov radiation is implemented.
 
 *   **Statistical Photon Calculation** (`PostStepDoIt`): Calculates the number of photons to be generated in the current step.
 
@@ -319,7 +319,7 @@ A container class that stores per-event state information.
 
 *   **Callback Function Storage**: Stores the `StepCallback` and `SecondaryCallback` registered by the user.
 
-*   **Medium Information**: Stores `maxRefractiveIndex` to provide necessary information for Cherenkov calculations.
+*   **Medium Information**: Stores `maxRefractiveIndex` to provide necessary information for Cerenkov calculations.
 
 I3ParticleG4ParticleConverter
 +++++++++++++++++++++++++++++
