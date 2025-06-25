@@ -226,7 +226,7 @@ I3GeantService
 
 The central manager that oversees all functions of `geantprop`. It inherits from `I3PropagatorService` to integrate with the Icetray framework.
 
-Singleton Pattern Implementation : The `std::atomic<bool> thereCanBeOnlyOneGeant4` flag allows only one instance per process. Attempting to create a second instance results in a runtime error.
+#. Singleton Pattern Implementation : The `std::atomic<bool> thereCanBeOnlyOneGeant4` flag allows only one instance per process. Attempting to create a second instance results in a runtime error.
 
 #. Particle Filtering Logic : The `ShouldSkip()` method pre-filters particles based on the following rules:
     - All neutrinos are automatically skipped.
@@ -254,9 +254,9 @@ TrkSteppingAction
 
 A class responsible for step-by-step processing. It only processes the **primary particle** to which the Geant service is assigned.
 
-#   MMC Track Segment Creation : When the accumulated path of the current track's particle exceeds `binSize`, it finalizes the current track and starts a new one.
+#.   MMC Track Segment Creation : When the accumulated path of the current track's particle exceeds `binSize`, it finalizes the current track and starts a new one.
 
-#   Energy Loss Calculation : It calculates the amount of energy lost by recording the start and end energies for each segment.
+#.   Energy Loss Calculation : It calculates the amount of energy lost by recording the start and end energies for each segment.
 
 TrkStackingAction
 ------------------------
