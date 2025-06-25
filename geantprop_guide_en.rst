@@ -252,8 +252,8 @@ These classes directly control the main flow of the Geant4 simulation (event, tr
 
 A class that controls the simulation at the event level. It stores the `StepCallback` and `SecondaryCallback` registered by the user in the event information, making them accessible to other Action classes.
 
-TrkTrackingAction
-+++++++++++++++++
+*   TrkTrackingAction
+
 
 A class that manages the tracks of individual particles. It records the relationship between parent and child particles and also records the particle's path length.
 
