@@ -225,7 +225,7 @@ Class Structure Overview
 Top-Level Service
 ^^^^^^^^^^^^^^^^^
 
-I3GeantService
+``I3GeantService``
 ++++++++++++++
 
 The central manager that oversees all functions of `geantprop`. It inherits from `I3PropagatorService` to integrate with the Icetray framework.
