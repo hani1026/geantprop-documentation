@@ -257,7 +257,7 @@ A class that controls the simulation at the event level. It stores the `StepCall
 
 A class that manages the tracks of individual particles. It records the relationship between parent and child particles and also records the particle's path length.
 
-*   **TrkSteppingAction
+*   **TrkSteppingAction**
 
 
 A class responsible for step-by-step processing. It only processes the **primary particle** to which the Geant service is assigned.
