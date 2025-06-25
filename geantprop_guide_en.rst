@@ -221,7 +221,7 @@ Geant4 Simulation Basic Structure
 Class Structure Overview
 ------------------------
 
-``I3GeantService``
+I3GeantService
 ------------------------
 
 The central manager that oversees all functions of `geantprop`. It inherits from `I3PropagatorService` to integrate with the Icetray framework.
@@ -239,17 +239,17 @@ Singleton Pattern Implementation : The `std::atomic<bool> thereCanBeOnlyOneGeant
     3. Executes a single event by calling `runManager_->BeamOn(1)`.
     4. Collects the simulation results as a vector of `I3Particle` and adds them to the MCTree / MMCtrackList before returning.
 
-``TrkEventAction``
+TrkEventAction
 ------------------------
 
 A class that controls the simulation at the event level. It stores the `StepCallback` and `SecondaryCallback` registered by the user in the event information, making them accessible to other Action classes.
 
-``TrkTrackingAction``
+TrkTrackingAction
 ------------------------
 
 A class that manages the tracks of individual particles. It records the relationship between parent and child particles and also records the particle's path length.
 
-``TrkSteppingAction``
+TrkSteppingAction
 ------------------------
 
 A class responsible for step-by-step processing. It only processes the **primary particle** to which the Geant service is assigned.
@@ -258,7 +258,7 @@ A class responsible for step-by-step processing. It only processes the **primary
 
 #   Energy Loss Calculation : It calculates the amount of energy lost by recording the start and end energies for each segment.
 
-``TrkStackingAction``
+TrkStackingAction
 ------------------------
 
 A class that passes newly created secondary particles to the callback.
