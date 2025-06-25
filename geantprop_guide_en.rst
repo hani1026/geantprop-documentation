@@ -2,57 +2,61 @@
 .. Copyright (c) 2025 Hani Kimku <hkimku1@icecube.wisc.edu>
 .. SPDX-License-Identifier: ISC
 ..
-.. @file geantprop_guide_en.rst
+.. Permission to use, copy, modify, and/ordistribute this software for any
+.. purpose with or without fee is hereby granted, provided that the above
+.. copyright notice and this permission notice appear in all copies.
+..
+.. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.. WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.. MERCHANTABILIITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+.. SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.. WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
+.. OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+.. CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+..
+..
+.. @file geantprop_code.rst
+.. @version $LastChangedRevision$
+.. @date $Date$
 .. @author Hani Kimku
 
 ========================================
 I3Service Geant Propagator (geantprop)
 ========================================
 
-.. contents:: Table of Contents
-   :local:
-
 Project Introduction
 --------------------
 
-`geantprop` is a specialized `I3PropagatorService` implementation that performs particle propagation based on Geant4 within the IceCube experiment's Icetray framework. Derived from the Geant4 part of CLSim, it is designed to focus on Geant4 simulations. It supports the creation of MMC tracks for primary particles, the construction of an MCTree for secondary particles, and hybrid simulations through energy cutoffs.
+`geantprop` is a `I3PropagatorService` implementation that performs particle propagation and interaction based on Geant4 within the Icetray framework. Derived from the Geant4 part of CLSim, it is designed to run Geant4 standalone. It supports the creation of MMC tracks for primary particles, the construction of an MCTree for secondary particles, and hybrid simulations through energy cutoffs.
 
 Parameters
 ----------
 
 When creating `I3GeantService`, the following parameters can be configured.
 
-*   ``I3RandomServicePtr``
-    A pointer to Icetray's central random number generator service. All probabilistic processes in Geant4 (such as interaction occurrence, decay length, etc.) are determined using the random numbers provided by this service. This ensures the reproducibility of the entire simulation.
+*   ``I3RandomServicePtr`` : A pointer to random number generator service. All probabilistic processes in Geant4 are determined using the random numbers provided by this service. (Use `I3MTRandomService`)
 
-*   ``wlenBias`` (`I3CLSimFunctionConstPtr`)
-    Applies a bias according to wavelength in `TrkCerenkov`. It adjusts the number of photons generated per step in the Geant4 simulation.
+*   ``wlenBias`` : Applies a bias according to wavelength in `TrkCerenkov`. It adjusts the number of photons generated per step in the Geant4 simulation. It is obtained from the `icecube.clsim.traysegments.common.setupDetector` function.
 
-*   ``mediumProperties`` (`I3CLSimMediumPropertiesConstPtr`)
-    An object that defines the optical properties of the medium, such as the refractive index, absorption length, and scattering length of ice. This information is used in the `TrkDetectorConstruction` class to set up the material and optical properties in Geant4.
+*   ``mediumProperties`` : Defines the optical properties of the ice, such as the refractive index, absorption length, and scattering length in `TrkDetectorConstruction`. It is obtained from the `icecube.clsim.traysegments.common.setupDetector` function.
 
-*   ``physicsListName`` (`std::string`)
-    The name of the Geant4 Physics List to be used. The Physics List determines which physical processes are included in the simulation. The default value, `"QGSP_BERT_EMV"`, means using the Quark-Gluon String model for high-energy hadronic interactions, the Bertini Cascade model for the low-energy region, and standard electromagnetic (EM) physics processes.
+*   ``physicsListName`` : Determine which physical processes are included in the simulation. The default value, `"QGSP_BERT_EMV"`, means using the Quark-Gluon String model for high energies above 20GeV, the Bertini Cascade model for hadrons of energy less than 10GeV, and standard electromagnetic (EM) physics processes tuned for better CPU performance.
 
-*   ``maxBetaChangePerStep`` (`double`)
-    The maximum allowed change in a particle's velocity (β = v/c) in a single Geant4 step. This is applied in the `TrkCerenkov` class. Setting this value smaller allows for more precise calculation of trajectories for particles that curve in a magnetic field or lose energy rapidly, but it slows down the simulation.
+*   ``maxBetaChangePerStep`` : The maximum allowed change in a particle's velocity (β = v/c) in a single Geant4 step. This is applied in the `TrkCerenkov` class. Setting this value smaller allows for more precise calculation of trajectories for particles that curve in a magnetic field or lose energy rapidly, but it slows down the simulation.
 
-*   ``maxNumPhotonsPerStep`` (`uint32_t`)
-    Limits the maximum number of Cherenkov photons that can be generated in a single Geant4 step. This is applied in the `TrkCerenkov` class and serves as a safeguard to prevent very high-energy particles from using excessive memory or computation time by generating a vast number of photons in one step.
+*   ``maxNumPhotonsPerStep`` : Limits the maximum number of Cherenkov photons that can be generated in a single Geant4 step. This is applied in the `TrkCerenkov` class and serves as a safeguard to prevent very high-energy particles from using excessive memory or computation time by generating a vast number of photons in one step.
 
-*   ``createMCTree`` (`bool`)
-    If this value is `true`, all secondary particles (electrons, positrons, muons, pions, etc.) generated in the Geant4 simulation are collected and added to the `I3MCTree`. If set to `false`, secondary particle information is not saved. As the particle's energy increases, the number of secondary particles grows, thus increasing memory usage.
+*   ``createMCTree`` : If this value is `true`, all secondary particles (electrons, positrons, muons, pions, etc.) generated in the Geant4 simulation are collected and added to the `I3MCTree`. If set to `false`, secondary particle information is not saved. As the particle's energy increases, the number of secondary particles grows, thus increasing memory usage.
 
-*   ``binSize`` (`double`)
-*   ``createMMCTrackList`` (`bool`)
-    If `createMMCTrackList` is `true`, the path of the primary particle is added to the frame as an `I3MMCTrackList`. `I3MMCTrack` records the particle's entire path by dividing it into several straight segments of `binSize` length (in meters).
+*   ``binSize`` : The length of the segment in which the MMC track is divided.
 
-*   ``CrossoverEnergyEM`` (`double`)
-*   ``CrossoverEnergyHadron`` (`double`)
-    Energy cutoff values (in GeV) for electromagnetic (EM) or hadronic interactions. If the energy of a particle being simulated exceeds this cutoff value, Geant4 will no longer propagate that particle.
+*   ``createMMCTrackList`` : If `createMMCTrackList` is `true`, the path of the primary particle is added to the frame as an `I3MMCTrackList`. `I3MMCTrack` records the particle's entire path by dividing it into several straight segments of `binSize` length (in meters).
 
-*   ``skipMuon`` (`bool`)
-    If this value is `true`, all muon (`MuPlus`, `MuMinus`) particles are immediately skipped without being propagated in Geant4. This is useful when using another propagator (e.g., `PROPOSAL`) to handle muons separately.
+*   ``CrossoverEnergyEM`` : Energy cutoff value (in GeV) for electromagnetic (EM) interactions. If the energy of a particle being simulated exceeds this cutoff value, Geant4 will no longer propagate that particle.
+
+*   ``CrossoverEnergyHadron`` : Energy cutoff value (in GeV) for hadronic interactions. If the energy of a particle being simulated exceeds this cutoff value, Geant4 will no longer propagate that particle.
+
+*   ``skipMuon`` : If this value is `true`, all muon (`MuPlus`, `MuMinus`) particles are immediately skipped without being propagated in Geant4. This is useful when using another propagator (e.g., `PROPOSAL`) to handle muons separately.
 
 Usage & Examples
 --------------------------------------
@@ -64,11 +68,40 @@ Basic Configuration
 
 .. code-block:: python
 
-   from I3Tray import I3Tray
-   from icecube import icetray, dataclasses, dataio, phys_services, sim_services
-   from icecube import geantprop
+   from icecube import icetray, dataclasses, phys_services, geantprop
+   from I3Tray import *
+   from icecube.clsim.traysegments.common import setupDetector
+   from icecube.sim_services import I3ParticleTypePropagatorServiceMap
 
-   # 1. Create a geantprop service instance
+   # 1. Get the random service and detector properties
+   randomService = phys_services.I3MTRandomService([seed, streamnum, nstreams])
+
+   # 2. Get the detector properties
+   propparams = setupDetector(
+    GCDFile=GCDFile,
+    SimulateFlashers=False,
+    IceModelLocation=expandvars("$I3_BUILD/ice-models/resources/models/ICEMODEL/spice_bfr-v2"),
+    DisableTilt=False,
+    UnWeightedPhotons=False,
+    UnWeightedPhotonsScalingFactor=None,
+    UseI3PropagatorService=False,
+    UseGeant4 = True,
+    CrossoverEnergyEM=None,
+    CrossoverEnergyHadron=None,
+    UseCascadeExtension=True,
+    DOMOversizeFactor=1.0,
+    UnshadowedFraction=1.2,
+    DOMEfficiency=1,
+    HoleIceParameterization=expandvars("$I3_BUILD/ice-models/resources/models/ANGSENS/angsens/as.flasher_p1_0.30_p2_-1"),
+    WavelengthAcceptance=None,
+    DOMRadius=0.16510 * icetray.I3Units.m,
+    CableOrientation=None,
+    IgnoreSubdetectors=["IceTop", "NotOpticalSensor"])
+    
+   wlenbias = propparams['WavelengthGenerationBias']
+   mediumproperties = propparams['MediumProperties']
+   
+   # 3. Create a geantprop service instance
    propagator = geantprop.I3GeantService(
        randomService=randomService,
        wlenBias=wlenbias,
@@ -189,10 +222,11 @@ Class Structure Overview
 
 `geantprop` consists of several classes implemented by inheriting Geant4's standard interfaces ("User Action", etc.). These classes can be broadly divided into **Top-Level Service**, **Simulation Control**, **Simulation Environment**, and **Data Processing & Utilities**.
 
-### Top-Level Service
+Top-Level Service
+^^^^^^^^^^^^^^^^^
 
-**I3GeantService**
-~~~~~~~~~~~~~~~~~~
+I3GeantService
+++++++++++++++
 
 The central manager that oversees all functions of `geantprop`. It inherits from `I3PropagatorService` to integrate with the Icetray framework.
 
@@ -209,22 +243,23 @@ The central manager that oversees all functions of `geantprop`. It inherits from
     3. Executes a single event by calling `runManager_->BeamOn(1)`.
     4. Collects the simulation results as a vector of `I3Particle` and adds them to the MCTree / MMCtrackList before returning.
 
-### Simulation Control (User Actions)
+Simulation Control (User Actions)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 These classes directly control the main flow of the Geant4 simulation (event, track, step).
 
-**TrkEventAction**
-~~~~~~~~~~~~~~~~~~
+TrkEventAction
+++++++++++++++
 
 A class that controls the simulation at the event level. It stores the `StepCallback` and `SecondaryCallback` registered by the user in the event information, making them accessible to other Action classes.
 
-**TrkTrackingAction**
-~~~~~~~~~~~~~~~~~~~~~
+TrkTrackingAction
++++++++++++++++++
 
 A class that manages the tracks of individual particles. It records the relationship between parent and child particles and also records the particle's path length.
 
-**TrkSteppingAction**
-~~~~~~~~~~~~~~~~~~~~~
+TrkSteppingAction
++++++++++++++++++
 
 A class responsible for step-by-step processing. It only processes the **primary particle** to which the Geant service is assigned.
 
@@ -232,15 +267,16 @@ A class responsible for step-by-step processing. It only processes the **primary
 
 *   **Energy Loss Calculation**: It calculates the amount of energy lost by recording the start and end energies for each segment.
 
-**TrkStackingAction**
-~~~~~~~~~~~~~~~~~~~~~
+TrkStackingAction
++++++++++++++++++
 
 A class that passes newly created secondary particles to the callback.
 
-### Simulation Environment (Physics & Geometry)
+Simulation Environment (Physics & Geometry)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**TrkDetectorConstruction**
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TrkDetectorConstruction
++++++++++++++++++++++++
 
 A class that defines the geometry and materials of the simulation world.
 
@@ -248,8 +284,8 @@ A class that defines the geometry and materials of the simulation world.
 
 *   **3D Geometric Structure**: Models a realistic IceCube geometry including the World Volume, a rock layer, and an air layer.
 
-**TrkOpticalPhysics**
-~~~~~~~~~~~~~~~~~~~~~
+TrkOpticalPhysics
++++++++++++++++++
 
 A class that registers optical physics processes with the Geant4 engine.
 
@@ -257,8 +293,8 @@ A class that registers optical physics processes with the Geant4 engine.
 
 *   **Wavelength Bias Function Setting**: Sets the wavelength weights for importance sampling via `SetWlenBiasFunction()`.
 
-**TrkCerenkov**
-~~~~~~~~~~~~~~~
+TrkCerenkov
++++++++++++
 
 A class where the core optimization of Cherenkov radiation is implemented.
 
@@ -266,17 +302,18 @@ A class where the core optimization of Cherenkov radiation is implemented.
 
 *   **SimStep Information Passing**: Packages the calculated number of photons and step information into an `I3SimStep` and passes it to the user callback.
 
-### Data Processing & Utilities
+Data Processing & Utilities
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 These are auxiliary classes that help the above classes operate smoothly.
 
-**TrkPrimaryGeneratorAction**
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TrkPrimaryGeneratorAction
++++++++++++++++++++++++++
 
 A class that injects the initial particle at the starting point of the simulation.
 
-**TrkUserEventInformation**
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TrkUserEventInformation
++++++++++++++++++++++++
 
 A container class that stores per-event state information.
 
@@ -284,8 +321,8 @@ A container class that stores per-event state information.
 
 *   **Medium Information**: Stores `maxRefractiveIndex` to provide necessary information for Cherenkov calculations.
 
-**I3ParticleG4ParticleConverter**
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+I3ParticleG4ParticleConverter
++++++++++++++++++++++++++++++
 
 Handles the two-way conversion between `I3Particle` and Geant4 data formats.
 
@@ -295,8 +332,8 @@ Handles the two-way conversion between `I3Particle` and Geant4 data formats.
 
 *   **Unit Conversion**: Handles the conversion between the IceCube unit system (`I3Units`) and the Geant4 unit system (`CLHEP`).
 
-**TrkUISessionToQueue**
-~~~~~~~~~~~~~~~~~~~~~~~
+TrkUISessionToQueue
++++++++++++++++++++
 
 A bridge class that connects Geant4 messages to the IceCube logging system.
 
