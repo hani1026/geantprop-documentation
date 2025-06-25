@@ -220,6 +220,11 @@ Geant4 Simulation Basic Structure
 Class Structure Overview
 ------------------------
 
+.. contents:: Class Map
+   :local:
+   :depth: 1
+
+
 `geantprop` consists of several classes implemented by inheriting Geant4's standard interfaces ("User Action", etc.). These classes can be broadly divided into **Top-Level Service**, **Simulation Control**, **Simulation Environment**, and **Data Processing & Utilities**.
 
 Top-Level Service
