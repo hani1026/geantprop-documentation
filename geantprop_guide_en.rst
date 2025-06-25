@@ -228,12 +228,12 @@ The central manager that oversees all functions of `geantprop`. It inherits from
 
 * Singleton Pattern Implementation : The ``thereCanBeOnlyOneGeant4`` flag allows only one instance per process. Attempting to create a second instance results in a runtime error.
 
-* Particle Filtering Logic : The `ShouldSkip()` method pre-filters particles based on the following rules
+* Particle Filtering Logic : The ``ShouldSkip()`` method pre-filters particles based on the following rules
     - All neutrinos are automatically skipped.
     - If `skipMuon_` is true, muons are skipped.
     - EM and Hadronic particles with energy exceeding `CrossoverEnergyEM`/`CrossoverEnergyHadron` are skipped
 
-* Actual Propagation Execution : The `Propagate()` method performs the following steps.
+* Actual Propagation Execution : The ``Propagate()`` method performs the following steps.
     1. Converts `I3Particle` to `G4ParticleGun`.
     2. Registers callback functions with each Action class.
     3. Executes a single event by calling `runManager_->BeamOn(1)`.
