@@ -221,7 +221,8 @@ Geant4 Simulation Basic Structure
 Class Structure Overview
 ------------------------
 
-*   ``I3GeantService``
+``I3GeantService``
+------------------------
 
 The central manager that oversees all functions of `geantprop`. It inherits from `I3PropagatorService` to integrate with the Icetray framework.
 
@@ -239,14 +240,17 @@ Singleton Pattern Implementation : The `std::atomic<bool> thereCanBeOnlyOneGeant
     4. Collects the simulation results as a vector of `I3Particle` and adds them to the MCTree / MMCtrackList before returning.
 
 ``TrkEventAction``
+------------------------
 
 A class that controls the simulation at the event level. It stores the `StepCallback` and `SecondaryCallback` registered by the user in the event information, making them accessible to other Action classes.
 
 ``TrkTrackingAction``
+------------------------
 
 A class that manages the tracks of individual particles. It records the relationship between parent and child particles and also records the particle's path length.
 
 ``TrkSteppingAction``
+------------------------
 
 A class responsible for step-by-step processing. It only processes the **primary particle** to which the Geant service is assigned.
 
@@ -255,10 +259,12 @@ A class responsible for step-by-step processing. It only processes the **primary
 #   Energy Loss Calculation : It calculates the amount of energy lost by recording the start and end energies for each segment.
 
 ``TrkStackingAction``
+------------------------
 
 A class that passes newly created secondary particles to the callback.
 
 ``TrkDetectorConstruction``
+------------------------
 
 A class that defines the geometry and materials of the simulation world.
 
@@ -267,6 +273,7 @@ A class that defines the geometry and materials of the simulation world.
 *   3D Geometric Structure : Models a realistic IceCube geometry including the World Volume, a rock layer, and an air layer.
 
 ``TrkOpticalPhysics``
+------------------------
 
 A class that registers optical physics processes with the Geant4 engine.
 
@@ -275,6 +282,7 @@ A class that registers optical physics processes with the Geant4 engine.
 *   Wavelength Bias Function Setting : Sets the wavelength weights for importance sampling via `SetWlenBiasFunction()`.
 
 ``TrkCerenkov``
+------------------------
 
 A class where the core optimization of Cerenkov radiation is implemented.
 
@@ -283,10 +291,12 @@ A class where the core optimization of Cerenkov radiation is implemented.
 *   SimStep Information Passing : Packages the calculated number of photons and step information into an `I3SimStep` and passes it to the user callback.
 
 ``TrkPrimaryGeneratorAction``
+------------------------
 
 A class that injects the initial particle at the starting point of the simulation.
 
 ``TrkUserEventInformation``
+------------------------
 
 A container class that stores per-event state information.
 
@@ -295,6 +305,7 @@ A container class that stores per-event state information.
 *   Medium Information : Stores `maxRefractiveIndex` to provide necessary information for Cerenkov calculations.
 
 ``I3ParticleG4ParticleConverter``
+------------------------
 
 Handles the two-way conversion between `I3Particle` and Geant4 data formats.
 
@@ -305,6 +316,7 @@ Handles the two-way conversion between `I3Particle` and Geant4 data formats.
 *   Unit Conversion : Handles the conversion between the IceCube unit system (`I3Units`) and the Geant4 unit system (`CLHEP`).
 
 ``TrkUISessionToQueue``
+------------------------
 
 A bridge class that connects Geant4 messages to the IceCube logging system.
 
