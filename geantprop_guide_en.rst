@@ -226,7 +226,6 @@ Top-Level Service
 ^^^^^^^^^^^^^^^^^
 
 ``I3GeantService``
-++++++++++++++
 
 The central manager that oversees all functions of `geantprop`. It inherits from `I3PropagatorService` to integrate with the Icetray framework.
 
@@ -248,8 +247,8 @@ Simulation Control (User Actions)
 
 These classes directly control the main flow of the Geant4 simulation (event, track, step).
 
-TrkEventAction
-++++++++++++++
+<br>TrkEventAction<br>
+
 
 A class that controls the simulation at the event level. It stores the `StepCallback` and `SecondaryCallback` registered by the user in the event information, making them accessible to other Action classes.
 
